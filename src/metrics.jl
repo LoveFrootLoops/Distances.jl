@@ -328,9 +328,10 @@ for M in (metrics..., weightedmetrics...)
     @eval @inline (dist::$M)(a, b) = _evaluate(dist, a, b, parameters(dist))
 end
 
-# # Euclidean
-# @inline eval_op(::Euclidean, ai, bi, E) = E/2*abs2(bi[1:3] - ai[1:3] - (E^2*dot((b[1:3] - a[1:3]), a[7:9]) + dot((b[4:6] - a[4:6]), a[10:12]))/(2*(E^2*dot(a[7:9], a[7:9]) + dot(a[10:12], a[10:12])))*ai[7:9]) + 1/(2*E)*abs2(bi[4:6] - ai[4:6] - (E^2*dot((b[1:3] - a[1:3]), a[7:9]) + dot((b[4:6] - a[4:6]), a[10:12]))/(2*(E^2*dot(a[7:9], a[7:9]) + dot(a[10:12], a[10:12])))*ai[10:12]) 
-# euclidean(a, b, E) = Euclidean(E)(a, b)
+# Euclidean
+@inline eval_op(::Euclidean, ai, bi) = abs2(ai - bi)
+eval_end(::Euclidean, s) = sqrt(s)
+euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
 @inline eval_op(::WeightedEuclidean, ai, bi, wi) = abs2(ai - bi) * wi
@@ -352,7 +353,8 @@ peuclidean(a, b, p) = PeriodicEuclidean(p)(a, b)
 sqeuclidean(a, b) = SqEuclidean()(a, b)
 
 # Weighted Squared Euclidean
-@inline eval_op(::WeightedSqEuclidean, ai, bi, wi) = abs2(ai - bi) * wi
+@inline eval_op(::WeightedSqEuclidean, ai, bi, wi) = wi/2*abs2(bi[1:3] - ai[1:3] - (wi^2*dot((bi[1:3] - ai[1:3]), ai[7:9]) + dot((bi[4:6] - ai[4:6]), ai[10:12]))/(2*(wi^2*dot(ai[7:9], ai[7:9]) + dot(ai[10:12], ia[10:12])))*ai[7:9]) + 1/(2*E)*abs2(bi[4:6] - ai[4:6] - (E^2*dot((b[1:3] - ai[1:3]), ai[7:9]) + dot((bi[4:6] - ai[4:6]), ia[10:12]))/(2*(wi^2*dot(ai[7:9], ai[7:9]) + dot(ai[10:12], ai[10:12])))*ai[10:12]) 
+
 wsqeuclidean(a, b, w) = WeightedSqEuclidean(w)(a, b)
 
 # Cityblock
