@@ -329,7 +329,7 @@ for M in (metrics..., weightedmetrics...)
 end
 
 # Euclidean
-@inline eval_op(::Euclidean, ai, bi) = abs2(ai - bi)
+@inline eval_op(::Euclidean, ai, bi) = abs2(ai - 5*bi)
 eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
