@@ -330,7 +330,6 @@ end
 
 # # Euclidean
 # @inline eval_op(::Euclidean, ai, bi, E) = E/2*abs2(bi[1:3] - ai[1:3] - (E^2*dot((b[1:3] - a[1:3]), a[7:9]) + dot((b[4:6] - a[4:6]), a[10:12]))/(2*(E^2*dot(a[7:9], a[7:9]) + dot(a[10:12], a[10:12])))*ai[7:9]) + 1/(2*E)*abs2(bi[4:6] - ai[4:6] - (E^2*dot((b[1:3] - a[1:3]), a[7:9]) + dot((b[4:6] - a[4:6]), a[10:12]))/(2*(E^2*dot(a[7:9], a[7:9]) + dot(a[10:12], a[10:12])))*ai[10:12]) 
-# eval_end(::Euclidean, s)
 # euclidean(a, b, E) = Euclidean(E)(a, b)
 
 # Weighted Euclidean
