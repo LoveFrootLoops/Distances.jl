@@ -334,7 +334,7 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
-@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  wi[1]/2*abs2(bi[1:3] - ai[1:3] - (wi[1]^2*dot((bi[1:3] - ai[1:3]), ai[7:9]) + dot((bi[4:6] - ai[4:6]), ai[10:12]))/(2*(wi[1]^2*dot(ai[7:9], ai[7:9]) + dot(ai[10:12], ai[10:12])))*ai[7:9]) + 1/(2*wi[1])*abs2(bi[4:6] - ai[4:6] - (wi[1]^2*dot((bi[1:3] - ai[1:3]), ai[7:9]) + dot((bi[4:6] - ai[4:6]), ai[10:12]))/(2*(wi[1]^2*dot(ai[7:9], ai[7:9]) + dot(ai[10:12], ai[10:12])))*ai[10:12]) 
+@inline eval_op(::WeightedEuclidean, ai, bi, wi) = wi[1]/2 *  abs2(bi[1:3] - ai[1:3] - ((wi[1]^2*dot((bi[1:3] -  ai[1:3]),  ai[7:9]) + dot((bi[4:6] -  ai[4:6]), ai[10:12]))/(2*(wi[1]^2*dot(ai[7:9],ai[7:9]) + dot(ai[10:12],ai[10:12]))))* ai[7:9]) + 1/(2*wi[1])*abs2(bi[4:6] - ai[4:6] - ((wi[1]^2*dot((bi[1:3] -  ai[1:3]),  ai[7:9]) + dot((bi[4:6] -  ai[4:6]), ai[10:12]))/(2*(wi[1]^2*dot(ai[7:9],ai[7:9]) + dot(ai[10:12],ai[10:12]))))*ai[10:12])
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
