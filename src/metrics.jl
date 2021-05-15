@@ -334,8 +334,8 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
-@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi[1:3] - ai[1:3] - wi[1]* ai[7:9]) + abs2(bi[4:6] - ai[4:6] - wi[1]*ai[10:12] )
-eval_end(::WeightedEuclidean, s) = sqrt(s)
+@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi[1:3] - ai[1:3] - wi[1]* ai[7:9])
+eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
 # PeriodicEuclidean
