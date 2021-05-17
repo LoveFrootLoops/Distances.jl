@@ -263,6 +263,8 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a::AbstractArray, b
     end
 end
 
+_t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))
+
 Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a, b, p)
     @boundscheck if length(a) != length(b)
         throw(DimensionMismatch("first collection has length $(length(a)) which does not match the length of the second, $(length(b))."))
@@ -274,7 +276,8 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a, b, p)
         return zero(result_type(d, a, b))
     end
     s = eval_start(d, a, b)
-    @inbounds for (ai, bi, pi) in zip(a, b, p)
+	
+    @inbounds for (ai, bi, pi) in zip(a, b, _t(a, b, p)*p)
         s = eval_reduce(d, s, eval_op(d, ai, bi, pi))
     end
     return eval_end(d, s)
@@ -335,17 +338,17 @@ euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
 _t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))
-#@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
-#eval_end(::WeightedEuclidean, s) = s
-#weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
+@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
+eval_end(::WeightedEuclidean, s) = s
+weuclidean(a, b, w) = WeightedEuclidean(_w)(a, b)
  
 # Weighted Squared Euclidean
 @inline eval_op(::WeightedSqEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
 wsqeuclidean(a, b, w) = WeightedSqEuclidean(w)(a, b)
 
 # WeightedEuclidean
-eval_op(::WeightedEuclidean, a, b, w) = WeightedSqEuclidean(_t(a, b, w)*w)(a, b)
-weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
+#eval_op(::WeightedEuclidean, a, b, w) = WeightedSqEuclidean(_t(a, b, w)*w)(a, b)
+#weuclidean(a, b, w) = WeightedEuclidean(_t(a, b, w)*w)(a, b)
 
 # PeriodicEuclidean
 @inline function eval_op(::PeriodicEuclidean, ai, bi, p)
