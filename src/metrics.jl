@@ -333,6 +333,10 @@ end
 eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
+# New Function
+function _t(a, b, w) 
+	return (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
+
 # Weighted Euclidean
 @inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
 eval_end(::WeightedEuclidean, s) = s
