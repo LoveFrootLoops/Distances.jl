@@ -340,7 +340,7 @@ eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
 # CorrDist
-(::CorrDist(w))(a, b) = WeightedEuclidean(_t(a, b, w))(a, b)
+(::CorrDist)(a, b, w) = WeightedEuclidean(_t(a, b, w))(a, b)
 corr_dist(a, b, w) = CorrDist(w)(a, b)
  
 # Weighted Squared Euclidean
