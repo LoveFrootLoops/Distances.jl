@@ -339,6 +339,11 @@ euclidean(a, b) = Euclidean()(a, b)
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
+# CorrDist
+_centralize(x) = x .- mean(x)
+(::CorrDist)(a, b, w) = WeightedEuclidean(w)(_centralize(a), _centralize(b))
+corr_dist(a, b, w) = CorrDist(w)(a, b)
+
 # PeriodicEuclidean
 @inline function eval_op(::PeriodicEuclidean, ai, bi, p)
     s1 = abs(ai - bi)
@@ -413,10 +418,10 @@ end
 cosine_dist(a, b) = CosineDist()(a, b)
 
 # CorrDist
-_centralize(x) = x .- mean(x)
-(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
-(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
-corr_dist(a, b) = CorrDist()(a, b)
+#_centralize(x) = x .- mean(x)
+#(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
+#(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
+#corr_dist(a, b) = CorrDist()(a, b)
 
 # ChiSqDist
 @inline eval_op(::ChiSqDist, ai, bi) = (d = abs2(ai - bi) / (ai + bi); ifelse(ai != bi, d, zero(d)))
