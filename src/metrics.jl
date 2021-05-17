@@ -278,7 +278,7 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a, b, p_)
     end
     s = eval_start(d, a, b)
     @inbounds for (ai, bi, pi) in zip(a, b, p)
-        s = eval_reduce(d, s, eval_op(d, ai, bi, pi))
+        s = eval_reduce(d, s, eval_op(d, ai, bi-pi, pi))
     end
     return eval_end(d, s)
 end
@@ -302,11 +302,11 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a::AbstractArray, b
                 ai = a[I]
                 bi = b[I]
                 pi = p[I]
-                s = eval_reduce(d, s, eval_op(d, ai, bi, pi))
+                s = eval_reduce(d, s, eval_op(d, ai, bi-pi, pi))
             end
         else
             for (ai, bi, pi) in zip(a, b, p)
-                s = eval_reduce(d, s, eval_op(d, ai, bi, pi))
+                s = eval_reduce(d, s, eval_op(d, ai, bi-pi, pi))
             end
         end
         return eval_end(d, s)
@@ -344,7 +344,6 @@ euclidean(a, b) = Euclidean()(a, b)
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
  
-
 # PeriodicEuclidean
 @inline function eval_op(::PeriodicEuclidean, ai, bi, p)
     s1 = abs(ai - bi)
