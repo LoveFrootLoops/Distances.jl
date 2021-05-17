@@ -344,7 +344,7 @@ _t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/
 wsqeuclidean(a, b, w) = WeightedSqEuclidean(w)(a, b)
 
 # WeightedEuclidean
-(::WeightedEuclidean)(a, b, w) = WeightedSqEuclidean(_t(a, b, w)*w)(a, b)
+(::WeightedEuclidean)(w)(a, b) = WeightedSqEuclidean(_t(a, b, w)*w)(a, b)
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
 # PeriodicEuclidean
