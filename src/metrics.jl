@@ -341,7 +341,8 @@ weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
 # CorrDist
 _centralize(x) = x .- mean(x)
-corr_dist(a, b, w) = WeightedEuclidean(w)(_centralize(a), _centralize(b))
+CorrDist(w)(a, b) = WeightedEuclidean(w)(_centralize(a), _centralize(b))
+corr_dist(a, b, w) = CorrDist(w)(a, b)
 
 # PeriodicEuclidean
 @inline function eval_op(::PeriodicEuclidean, ai, bi, p)
