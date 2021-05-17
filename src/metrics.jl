@@ -336,15 +336,10 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
-@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
-eval_end(::WeightedEuclidean, s) = s
+(::WeightedEuclidean, a, b, w) = (b - a - w)^2
+#eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
-# CorrDist
-_centralize(x) = x .- mean(x)
-(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
-(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
-corr_dist(a, b) = CorrDist()(a, b)
 
 # PeriodicEuclidean
 @inline function eval_op(::PeriodicEuclidean, ai, bi, p)
