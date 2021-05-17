@@ -338,11 +338,6 @@ euclidean(a, b) = Euclidean()(a, b)
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
-
-# Weighted Squared Euclidean
-@inline eval_op(::WeightedSqEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
-wsqeuclidean(a, b, w) = WeightedSqEuclidean(w)(a, b)
-´
 # PeriodicEuclidean
 @inline function eval_op(::PeriodicEuclidean, ai, bi, p)
     s1 = abs(ai - bi)
@@ -358,8 +353,8 @@ peuclidean(a, b, p) = PeriodicEuclidean(p)(a, b)
 sqeuclidean(a, b) = SqEuclidean()(a, b)
 
 # Weighted Squared Euclidean
-#@inline eval_op(::WeightedSqEuclidean, ai, bi, wi) = abs2(ai - bi) * wi
-#wsqeuclidean(a, b, w) = WeightedSqEuclidean(w)(a, b)
+@inline eval_op(::WeightedSqEuclidean, ai, bi, wi) = abs2(ai - bi) * wi
+wsqeuclidean(a, b, w) = WeightedSqEuclidean(w)(a, b)
 
 # Cityblock
 @inline eval_op(::Cityblock, ai, bi) = abs(ai - bi)
