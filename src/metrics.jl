@@ -263,8 +263,7 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a::AbstractArray, b
     end
 end
 
-function _t(a, b, w) 
-	return (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))
+_t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))
 
 Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a, b, p_)
 	p = _t(a, b, p_)*p_
