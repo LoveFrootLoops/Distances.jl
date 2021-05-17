@@ -297,6 +297,7 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a::AbstractArray, b
         s = eval_start(d, a, b)
         if (IndexStyle(a, b, p) === IndexLinear() && eachindex(a) == eachindex(b) == eachindex(p)) ||
                 axes(a) == axes(b) == axes(p)
+			p = _t(a, b, p)*p
             @simd for I in eachindex(a, b, p)
                 ai = a[I]
                 bi = b[I]
