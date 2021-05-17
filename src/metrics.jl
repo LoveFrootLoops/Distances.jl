@@ -276,8 +276,9 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a, b, p)
         return zero(result_type(d, a, b))
     end
     s = eval_start(d, a, b)
-	
-    @inbounds for (ai, bi, pi) in zip(a, b, _t(a, b, p)*p)
+	p = _t(a, b, p)*p
+    @inbounds for (ai, bi, pi) in zip(a, b, p)
+		println(p)
         s = eval_reduce(d, s, eval_op(d, ai, bi, pi))
     end
     return eval_end(d, s)
@@ -337,7 +338,6 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
-_t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))
 @inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(_w)(a, b)
