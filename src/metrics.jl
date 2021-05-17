@@ -263,10 +263,10 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a::AbstractArray, b
     end
 end
 
-_t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))
+_t(a, b, w) = (dot((b[1:3] - a[1:3]), p_[1:3]) + dot((b[4:6] - a[4:6]), p_[4:6]))/(2*(dot(p_[1:3],p_[1:3]) + dot(p_[4:6],p_[4:6])))
 
 Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a, b, p_)
-	p = _t(a, b, p_)*p_
+	p = (dot((b[1:3] - a[1:3]), p_[1:3]) + dot((b[4:6] - a[4:6]), p_[4:6]))/(2*(dot(p_[1:3],p_[1:3]) + dot(p_[4:6],p_[4:6])))*p_
     @boundscheck if length(a) != length(b)
         throw(DimensionMismatch("first collection has length $(length(a)) which does not match the length of the second, $(length(b))."))
     end
@@ -283,7 +283,7 @@ Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a, b, p_)
     return eval_end(d, s)
 end
 Base.@propagate_inbounds function _evaluate(d::UnionMetrics, a::AbstractArray, b::AbstractArray, p_::AbstractArray)
-	p = _t(a, b, p_)*p_
+	p = (dot((b[1:3] - a[1:3]), p_[1:3]) + dot((b[4:6] - a[4:6]), p_[4:6]))/(2*(dot(p_[1:3],p_[1:3]) + dot(p_[4:6],p_[4:6])))*p_
     @boundscheck if length(a) != length(b)
         throw(DimensionMismatch("first array has length $(length(a)) which does not match the length of the second, $(length(b))."))
     end
@@ -315,7 +315,7 @@ end
 
 _evaluate(dist::UnionMetrics, a::Number, b::Number, ::Nothing) = eval_end(dist, eval_op(dist, a, b))
 function _evaluate(dist::UnionMetrics, a::Number, b::Number, p_)
-	p = _t(a, b, p_)*p_
+	p = (dot((b[1:3] - a[1:3]), p_[1:3]) + dot((b[4:6] - a[4:6]), p_[4:6]))/(2*(dot(p_[1:3],p_[1:3]) + dot(p_[4:6],p_[4:6])))*p_
     length(p) != 1 && throw(DimensionMismatch("inputs are scalars but parameters have length $(length(p))."))
     eval_end(dist, eval_op(dist, a, b, first(p)))
 end
