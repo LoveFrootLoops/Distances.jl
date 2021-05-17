@@ -1,8 +1,3 @@
-# New Function
-function tangent(a, b, w) 
-	t =  dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
-return t 
-
 
 # Ordinary metrics
 
