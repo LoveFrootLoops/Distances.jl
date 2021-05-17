@@ -334,13 +334,13 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
-_t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
 @inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
 # CorrDist
-(::CorrDist)(a, b) = WeightedEuclidean(_t(a, b, w))(a, b)
+_t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
+(::CorrDist)(a, b) = WeightedEuclidean(_t(a, b, w))(a, b)(a, b)
 corr_dist(a, b, w) = CorrDist(w)(a, b)
  
 # Weighted Squared Euclidean
@@ -421,10 +421,10 @@ end
 cosine_dist(a, b) = CosineDist()(a, b)
 
 # CorrDist
-_centralize(x) = x .- mean(x)
-(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
-(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
-corr_dist(a, b) = CorrDist()(a, b)
+#_centralize(x) = x .- mean(x)
+#(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
+#(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
+#corr_dist(a, b) = CorrDist()(a, b)
 
 # ChiSqDist
 @inline eval_op(::ChiSqDist, ai, bi) = (d = abs2(ai - bi) / (ai + bi); ifelse(ai != bi, d, zero(d)))
