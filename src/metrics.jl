@@ -203,8 +203,9 @@ struct NormRMSDeviation <: PreMetric end
 
 # Union types
 const metrics = (Euclidean,SqEuclidean,PeriodicEuclidean,Chebyshev,Cityblock,TotalVariation,Minkowski,Hamming,Jaccard,RogersTanimoto,CosineDist,ChiSqDist,KLDivergence,RenyiDivergence,BrayCurtis,JSDivergence,SpanNormDist,GenKLDivergence)
-const weightedmetrics = (WeightedEuclidean,WeightedSqEuclidean,WeightedCityblock,WeightedMinkowski,WeightedHamming, ModDist)
+const weightedmetrics = (WeightedEuclidean,WeightedSqEuclidean,WeightedCityblock,WeightedMinkowski,WeightedHamming)
 const UnionMetrics = Union{UnionPreMetric,UnionSemiMetric,UnionMetric}
+const CostumMetrics = (ModDist)
 
 ###########################################################
 #
@@ -217,6 +218,14 @@ parameters(::UnionSemiMetric) = nothing
 parameters(::UnionMetric) = nothing
 parameters(d::PeriodicEuclidean) = d.periods
 for dist in weightedmetrics
+    @eval parameters(d::$dist) = d.weights
+end
+
+for dist in weightedmetrics
+    @eval parameters(d::$dist) = d.weights
+end
+
+for dist in CostomMetrics
     @eval parameters(d::$dist) = d.weights
 end
 
