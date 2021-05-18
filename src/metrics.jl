@@ -343,7 +343,7 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
-@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai - wi)
+@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai-wi)
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
