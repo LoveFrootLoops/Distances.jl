@@ -425,8 +425,8 @@ cosine_dist(a, b) = CosineDist()(a, b)
 
 # ModDist
 _centralize(x) = x .- mean(x)
-(::ModDist{w})(a,b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
-moddist(a, b, w) = ModDist(w)(a, b)
+(::ModDist)(a,b,w) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
+moddist(a, b, w) = ModDist(a, b, w)
 
 # ChiSqDist
 @inline eval_op(::ChiSqDist, ai, bi) = (d = abs2(ai - bi) / (ai + bi); ifelse(ai != bi, d, zero(d)))
