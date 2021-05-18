@@ -220,7 +220,7 @@ for dist in weightedmetrics
     @eval parameters(d::$dist) = d.weights
 end
 
-Distances.parameters(md::ModDist) = (md.weights)
+Distances.parameters(md::ModDist) = md.weights
 
 result_type(dist::UnionMetrics, ::Type{Ta}, ::Type{Tb}) where {Ta,Tb} =
     result_type(dist, _eltype(Ta), _eltype(Tb), parameters(dist))
@@ -343,7 +343,6 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
-WeightedEuclidean.weights = zeros(6)
 @inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai)*wi
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
@@ -430,7 +429,7 @@ corr_dist(a, b) = CorrDist()(a, b)
 # ModDist
 # _t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
 _centralize(x) = x .- mean(x)
-(::ModDist)(a, b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
+(md::ModDist)(a, b) = WeightedSqEuclidean(md.weights)(_centralize(a), _centralize(b))
 moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
