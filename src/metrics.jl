@@ -119,6 +119,10 @@ struct WeightedHamming{W} <: UnionMetric
     weights::W
 end
 
+struct ModDist{W} <: SemiMetric
+    weights::W
+end
+
 struct CosineDist <: UnionSemiMetric end
 # CorrDist is excluded from `UnionMetrics`
 struct CorrDist <: SemiMetric end
@@ -414,10 +418,15 @@ end
 cosine_dist(a, b) = CosineDist()(a, b)
 
 # CorrDist
+#_centralize(x) = x .- mean(x)
+#(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
+#(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
+#corr_dist(a, b) = CorrDist()(a, b)
+
+# ModDist
 _centralize(x) = x .- mean(x)
-(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
-(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
-corr_dist(a, b) = CorrDist()(a, b)
+(::ModDist(w))(a, b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
+moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
 @inline eval_op(::ChiSqDist, ai, bi) = (d = abs2(ai - bi) / (ai + bi); ifelse(ai != bi, d, zero(d)))
