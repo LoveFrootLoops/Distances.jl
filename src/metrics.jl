@@ -125,8 +125,6 @@ struct ModDist{W} <: SemiMetric
     weights::W
 end
 
-Distances.parameters(md::ModDist) = (md.weights)
-
 struct CosineDist <: UnionSemiMetric end
 # CorrDist is excluded from `UnionMetrics`
 struct CorrDist <: SemiMetric end
@@ -221,7 +219,6 @@ parameters(d::PeriodicEuclidean) = d.periods
 for dist in weightedmetrics
     @eval parameters(d::$dist) = d.weights
 end
-
 
 result_type(dist::UnionMetrics, ::Type{Ta}, ::Type{Tb}) where {Ta,Tb} =
     result_type(dist, _eltype(Ta), _eltype(Tb), parameters(dist))
