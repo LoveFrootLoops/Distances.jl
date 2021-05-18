@@ -98,6 +98,7 @@ end
 struct Chebyshev <: UnionMetric end
 
 struct Cityblock <: UnionMetric end
+
 struct WeightedCityblock{W} <: UnionMetric
     weights::W
 end
@@ -115,6 +116,7 @@ struct WeightedMinkowski{W,T <: Real} <: UnionMetric
 end
 
 struct Hamming <: UnionMetric end
+
 struct WeightedHamming{W} <: UnionMetric
     weights::W
 end
@@ -425,7 +427,7 @@ cosine_dist(a, b) = CosineDist()(a, b)
 
 # ModDist
 _centralize(x) = x .- mean(x)
-(::ModDist{W})(a,b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
+(::ModDist){w}(a,b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
 moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
