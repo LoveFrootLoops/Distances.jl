@@ -343,6 +343,7 @@ eval_end(::Euclidean, s) = sqrt(s)
 euclidean(a, b) = Euclidean()(a, b)
 
 # Weighted Euclidean
+WeightedEuclidean.weights = zeros(6)
 @inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai)*wi
 eval_end(::WeightedEuclidean, s) = s
 weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
@@ -429,7 +430,7 @@ corr_dist(a, b) = CorrDist()(a, b)
 # ModDist
 # _t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
 _centralize(x) = x .- mean(x)
-(w::ModDist)(a, b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
+(::ModDist)(a, b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
 moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
