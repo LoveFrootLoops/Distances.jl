@@ -53,7 +53,7 @@ julia> pairwise(Euclidean(1e-12), x, x)
 """
 Euclidean() = Euclidean(0)
 
-struct WeightedEuclidean{W} <: UnionMetric
+struct WeightedEuclidean2{W} <: UnionMetric
     weights::W
 end
 
@@ -203,7 +203,7 @@ struct NormRMSDeviation <: PreMetric end
 
 # Union types
 const metrics = (Euclidean,SqEuclidean,PeriodicEuclidean,Chebyshev,Cityblock,TotalVariation,Minkowski,Hamming,Jaccard,RogersTanimoto,CosineDist,ChiSqDist,KLDivergence,RenyiDivergence,BrayCurtis,JSDivergence,SpanNormDist,GenKLDivergence)
-const weightedmetrics = (WeightedEuclidean,WeightedSqEuclidean,WeightedCityblock,WeightedMinkowski,WeightedHamming)
+const weightedmetrics = (WeightedEuclidean2,WeightedSqEuclidean,WeightedCityblock,WeightedMinkowski,WeightedHamming)
 const UnionMetrics = Union{UnionPreMetric,UnionSemiMetric,UnionMetric}
 
 ###########################################################
@@ -423,13 +423,13 @@ _centralize(x) = x .- mean(x)
 corr_dist(a, b) = CorrDist()(a, b)
 
 # Weighted Euclidean
-@inline eval_op(::WeightedEuclidean, ai, bi, wi) =  abs2(bi - ai-wi)
-eval_end(::WeightedEuclidean, s) = s
-weuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
+@inline eval_op(::WeightedEuclidean2, ai, bi, wi) =  abs2(bi - ai - wi)
+eval_end(::WeightedEuclidean2, s) = s
+weuclidean(a, b, w) = WeightedEuclidean2(w)(a, b)
 
 # ModDist
  _centralize(a,b,w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
-(md::ModDist)(a, b) = WeightedEuclidean(a)(_centralize(a,b,md.weights), b)
+(md::ModDist)(a, b) = WeightedEuclidean2(a)(_centralize(a,b,md.weights), b)
 moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
@@ -696,7 +696,7 @@ function _pairwise!(r::AbstractMatrix, dist::Union{SqEuclidean,Euclidean}, a::Ab
 end
 
 # Weighted SqEuclidean/Euclidean
-function _pairwise!(r::AbstractMatrix, dist::Union{WeightedSqEuclidean,WeightedEuclidean},
+function _pairwise!(r::AbstractMatrix, dist::Union{WeightedSqEuclidean,WeightedEuclidean2},
                     a::AbstractMatrix, b::AbstractMatrix)
     w = dist.weights
     m, na, nb = get_pairwise_dims(length(w), r, a, b)
@@ -711,7 +711,7 @@ function _pairwise!(r::AbstractMatrix, dist::Union{WeightedSqEuclidean,WeightedE
     end
     r
 end
-function _pairwise!(r::AbstractMatrix, dist::Union{WeightedSqEuclidean,WeightedEuclidean},
+function _pairwise!(r::AbstractMatrix, dist::Union{WeightedSqEuclidean,WeightedEuclidean2},
                     a::AbstractMatrix)
     w = dist.weights
     m, n = get_pairwise_dims(length(w), r, a)
