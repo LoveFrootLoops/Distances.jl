@@ -225,7 +225,7 @@ for dist in weightedmetrics
     @eval parameters(d::$dist) = d.weights
 end
 
-for dist in CostomMetrics
+for dist in CustomMetrics
     @eval parameters(d::$dist) = d.weights
 end
 
