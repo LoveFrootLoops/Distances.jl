@@ -430,7 +430,7 @@ corr_dist(a, b) = CorrDist()(a, b)
 # _t(a, b, w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
 _centralize(x) = x .- mean(x)
 moddist(a, b, w) = ModDist(w)(a, b)
-(::ModDist)(a, b) = WeightedSqEuclidean(ModDist.weights)(_centralize(a), _centralize(b))
+(::ModDist)(a, b) = WeightedSqEuclidean(md.weights)(_centralize(a), _centralize(b))
 
 # ChiSqDist
 @inline eval_op(::ChiSqDist, ai, bi) = (d = abs2(ai - bi) / (ai + bi); ifelse(ai != bi, d, zero(d)))
