@@ -420,14 +420,14 @@ end
 cosine_dist(a, b) = CosineDist()(a, b)
 
 # CorrDist
-#_centralize(x) = x .- mean(x)
-#(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
-#(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
-#corr_dist(a, b) = CorrDist()(a, b)
+_centralize(x) = x .- mean(x)
+(::CorrDist)(a, b) = CosineDist()(_centralize(a), _centralize(b))
+(::CorrDist)(a::Number, b::Number) = CosineDist()(zero(mean(a)), zero(mean(b)))
+corr_dist(a, b) = CorrDist()(a, b)
 
 # ModDist
 _centralize(x) = x .- mean(x)
-(::ModDist)(a,b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
+(::ModDist)(a,b,w) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
 moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
