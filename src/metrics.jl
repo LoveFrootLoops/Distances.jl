@@ -121,7 +121,7 @@ struct WeightedHamming{W} <: UnionMetric
     weights::W
 end
 
-struct ModDist{W} <: SemiMetric
+struct ModDist{W} <: UnionSemiMetric
     weights::W
 end
 
