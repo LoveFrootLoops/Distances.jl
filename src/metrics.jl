@@ -121,7 +121,7 @@ struct WeightedHamming{W} <: UnionMetric
     weights::W
 end
 
-struct ModDist{W} <: SemiMetric
+struct WeightedEuclidean{W} <: SemiMetric
     weights::W
 end
 
@@ -220,7 +220,7 @@ for dist in weightedmetrics
     @eval parameters(d::$dist) = d.weights
 end
 
-Distances.parameters(md::ModDist) = md.weights
+Distances.parameters(md::WeightedEuclidean) = md.weights
 
 result_type(dist::UnionMetrics, ::Type{Ta}, ::Type{Tb}) where {Ta,Tb} =
     result_type(dist, _eltype(Ta), _eltype(Tb), parameters(dist))
@@ -429,8 +429,8 @@ weuclidean(a, b, w) = WeightedEuclidean2(w)(a, b)
 
 # ModDist
  _centralize(a,b,w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
-(md::ModDist)(a, b) = WeightedEuclidean2(a)(_centralize(a,b,md.weights), b)
-moddist(a, b, w) = ModDist(w)(a, b)
+(md::WeightedEuclidean)(a, b) = WeightedEuclidean2(a)(_centralize(a,b,md.weights), b)
+weightedEuclidean(a, b, w) = WeightedEuclidean(w)(a, b)
 
 # ChiSqDist
 @inline eval_op(::ChiSqDist, ai, bi) = (d = abs2(ai - bi) / (ai + bi); ifelse(ai != bi, d, zero(d)))
@@ -616,6 +616,7 @@ function (::NormRMSDeviation)(a, b)
     return RMSDeviation()(a, b) / (amax - amin)
 end
 nrmsd(a, b) = NormRMSDeviation()(a, b)
+
 
 
 ###########################################################
