@@ -427,7 +427,7 @@ cosine_dist(a, b) = CosineDist()(a, b)
 
 # ModDist
 _centralize(x) = x .- mean(x)
-(::ModDist){w}(a,b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
+(::ModDist)(a,b) = WeightedSqEuclidean(w)(_centralize(a), _centralize(b))
 moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
