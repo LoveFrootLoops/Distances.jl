@@ -428,7 +428,7 @@ corr_dist(a, b) = CorrDist()(a, b)
 
 # ModDist
  _centralize(a,b,w) = (dot((b[1:3] - a[1:3]), w[1:3]) + dot((b[4:6] - a[4:6]), w[4:6]))/(2*(dot(w[1:3],w[1:3]) + dot(w[4:6],w[4:6])))*w
-(md::ModDist)(a, b) = WeightedEuclidean(centralize(a,b,md.weights))(a, b)
+(md::ModDist)(a, b) = WeightedEuclidean(_centralize(a,b,md.weights))(a, b)
 moddist(a, b, w) = ModDist(w)(a, b)
 
 # ChiSqDist
