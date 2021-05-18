@@ -125,6 +125,8 @@ struct ModDist{W} <: SemiMetric
     weights::W
 end
 
+Distances.parameters(md::ModDist) = (md.weights)
+
 struct CosineDist <: UnionSemiMetric end
 # CorrDist is excluded from `UnionMetrics`
 struct CorrDist <: SemiMetric end
@@ -205,7 +207,6 @@ struct NormRMSDeviation <: PreMetric end
 const metrics = (Euclidean,SqEuclidean,PeriodicEuclidean,Chebyshev,Cityblock,TotalVariation,Minkowski,Hamming,Jaccard,RogersTanimoto,CosineDist,ChiSqDist,KLDivergence,RenyiDivergence,BrayCurtis,JSDivergence,SpanNormDist,GenKLDivergence)
 const weightedmetrics = (WeightedEuclidean,WeightedSqEuclidean,WeightedCityblock,WeightedMinkowski,WeightedHamming)
 const UnionMetrics = Union{UnionPreMetric,UnionSemiMetric,UnionMetric}
-const CostumMetrics = (ModDist)
 
 ###########################################################
 #
@@ -221,13 +222,6 @@ for dist in weightedmetrics
     @eval parameters(d::$dist) = d.weights
 end
 
-for dist in weightedmetrics
-    @eval parameters(d::$dist) = d.weights
-end
-
-for dist in CustomMetrics
-    @eval parameters(d::$dist) = d.weights
-end
 
 result_type(dist::UnionMetrics, ::Type{Ta}, ::Type{Tb}) where {Ta,Tb} =
     result_type(dist, _eltype(Ta), _eltype(Tb), parameters(dist))
